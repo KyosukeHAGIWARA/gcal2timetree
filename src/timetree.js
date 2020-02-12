@@ -1,9 +1,10 @@
 var scriptProperties = PropertiesService.getScriptProperties();
-
+var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
 
 // テスト用メソッド
 function timtreeTest() {
-  var resres = timetreePostEvent();
+  // var eventOptions =
+  //   var resres = timeTreeCreateEvent(eventOptions);
   Logger.log(resres); // ユーザー取得メソッドをコール
   add_row();
 }
@@ -19,7 +20,7 @@ function timetreeGetUser() {
 // イベント作成メソッド
 function timetreePostEvent() {
   //  Logger.log("kita");
-  var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
+
 
   var url = Utilities.formatString('https://timetreeapis.com/calendars/%s/events', targetCalendarId);
   var method = 'POST';
@@ -58,7 +59,33 @@ function timeTreeDeleteEventById(eventId) {
 
 
 function timeTreeCreateEvent(eventOptions) {
-  return 0;
+  var url = Utilities.formatString('https://timetreeapis.com/calendars/%s/events', targetCalendarId);
+  var method = 'POST';
+  var payload = {
+    'data': {
+      'attributes': {
+        'category': 'schedule',
+        'title': eventOptions.title,
+        'all_day': eventOptions.isAllDay,
+        'start_at': eventOptions.start,
+        'start_timezone': 'UTC',
+        'end_at': eventOptions.end,
+        'end_timezone': 'UTC',
+        'description': eventOptions.description,
+        'location': eventOptions.location,
+      },
+      'relationships': {
+        'label': {
+          'data': {
+            'id': 'uIW4Wt9M8sVD,1',
+            'type': 'label'
+          }
+        }
+      }
+    }
+  };
+
+  return timetreeAPI(url, method, payload); // TimeTree APIをコール
 }
 
 

@@ -1,6 +1,7 @@
 // Gカレのイベント変更検知でトリガー引かれる関数
 function onCalendarEventUpdate(e) {
     mainProcess(e);
+    // Logger.log('kitayo');
 }
 
 function mainProcess(e) {
@@ -30,9 +31,9 @@ function mainProcess(e) {
             var options = {
 
             };
-            var response = timeTreeCreateEvent(options);
-
-            ssSqlInsertIdRecord(event.id, response.id);
+            var response = JSON.parse(timeTreeCreateEvent(event));
+            Logger.log(response);
+            ssSqlInsertIdRecord(event.id, response.data.id);
 
         } else if (event.status == 'updated') {
             //   更新なら 対応するイベントをList検索

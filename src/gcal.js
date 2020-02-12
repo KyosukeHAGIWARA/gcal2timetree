@@ -3,7 +3,8 @@ var nextSyncTokenKey = 'NEXT_SYNC_TOKEN';
 
 // テストメソッド
 function calendarUpdatedSample(e) {
-    var el = fetchUpdatedEvents(e);
+    // var el = fetchUpdatedEvents(e);
+    Logger.log('kitayo');
 }
 
 
@@ -24,35 +25,38 @@ function fetchUpdatedEvents(e) {
         var summaryEvent = diffEventList.items[i];
         // console.log(summaryEvent);
 
-        // id逆引きで対応するイベントを取ってくる
-        var detailEvent = CalendarApp.getEventById(summaryEvent.id);
+        if (summaryEvent.status == 'confirmed') {
+            // id逆引きで対応するイベントを取ってくる
+            var detailEvent = CalendarApp.getEventById(summaryEvent.id);
 
-        // 終日イベントかを判定
-        if (detailEvent.isAllDayEvent()) {
-            //TODO イケてない実装をイケてる実装にする 0:00 - 23:59とかで
-            summaryEvent.start.dateTime = summaryEvent.start.date;
-            summaryEvent.end.dateTime = summaryEvent.end.date;
+            // 終日イベントかを判定
+            if (false && detailEvent.isAllDayEvent()) {
+                //TODO イケてない実装をイケてる実装にする 0:00 - 23:59とかで
+                summaryEvent.start.dateTime = summaryEvent.start.date;
+                summaryEvent.end.dateTime = summaryEvent.end.date;
+            }
+
+            // イベント新規作成と更新を見分ける
+            if (false && summaryEvent.status == 'confirmed' && (summaryEvent.created != summaryEvent.updated)) {
+                // TODO ミリ秒まで比較してconfirmedが通らないので秒比較くらいに変える
+                summaryEvent.status = 'updated';
+            }
+
+            // イベントの基礎データをpush
+            eventList.push({
+                'id': summaryEvent.id,
+                'title': summaryEvent.summary,
+                'created': summaryEvent.created,
+                'updated': summaryEvent.updated,
+                'start': summaryEvent.start.dateTime,
+                'end': summaryEvent.end.dateTime,
+                'status': summaryEvent.status,
+                'location': detailEvent.getLocation(),
+                'description': detailEvent.getDescription(),
+                'isAllDay': detailEvent.isAllDayEvent()
+            });
         }
 
-        // イベント新規作成と更新を見分ける
-        if (summaryEvent.status == 'confirmed' && (summaryEvent.created != summaryEvent.updated)) {
-            // TODO ミリ秒まで比較してconfirmedが通らないので秒比較くらいに変える
-            summaryEvent.status = 'updated';
-        }
-
-        // イベントの基礎データをpush
-        eventList.push({
-            'id': summaryEvent.id,
-            'title': summaryEvent.summary,
-            'created': summaryEvent.created,
-            'updated': summaryEvent.updated,
-            'start': summaryEvent.start.dateTime,
-            'end': summaryEvent.end.dateTime,
-            'status': summaryEvent.status,
-            'location': detailEvent.getLocation(),
-            'description': detailEvent.getDescription(),
-            'isAllDay': detailEvent.isAllDayEvent()
-        });
 
     }
 
