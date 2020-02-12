@@ -10,7 +10,7 @@ function add_row() {
     gcal_event_id: g,
     tt_event_id: tt
   }]);
-  Logger.log(sssql.select(['gcal_event_id', 'tt_event_id']).filter('gcal_event_id = testa') result());
+  Logger.log(sssql.select(['gcal_event_id', 'tt_event_id']).filter('gcal_event_id = testa').result());
 
 }
 
