@@ -1,3 +1,6 @@
+var scriptProperties = PropertiesService.getScriptProperties();
+
+
 // テスト用メソッド
 function timtreeTest() {
   var resres = timetreePostEvent();
@@ -15,8 +18,8 @@ function timetreeGetUser() {
 
 // イベント作成メソッド
 function timetreePostEvent() {
-//  Logger.log("kita");
-  var targetCalendarId = PropertiesService.getScriptProperties().getProperty('TARGET_CALENDAR_ID_DEV');
+  //  Logger.log("kita");
+  var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
 
   var url = Utilities.formatString('https://timetreeapis.com/calendars/%s/events', targetCalendarId);
   var method = 'POST';
@@ -42,18 +45,31 @@ function timetreePostEvent() {
           }
         }
       }
-  }
-};
-  
+    }
+  };
+
   return timetreeAPI(url, method, payload); // TimeTree APIをコール
 }
 
 
+function timeTreeDeleteEventById(eventId) {
+  return 0;
+}
+
+
+function timeTreeCreateEvent(eventOptions) {
+  return 0;
+}
+
+
+function timeTreeUpdateEventById(eventId, eventOptions) {
+  return 0;
+}
 
 
 // TimeTree APIをコールするメソッド
 function timetreeAPI(url, method, payload) {
-  var accessToken = PropertiesService.getScriptProperties().getProperty('timetree_personal_access_token');
+  var accessToken = scriptProperties.getProperty('timetree_personal_access_token');
   var headers = {
     'Authorization': 'Bearer ' + accessToken
   };
@@ -61,17 +77,17 @@ function timetreeAPI(url, method, payload) {
     'method': method,
     'headers': headers,
     'payload': JSON.stringify(payload),
-    'contentType': 'application/json',    
+    'contentType': 'application/json',
     'muteHttpExceptions': true
   };
-//  Logger.log(options);
+  //  Logger.log(options);
 
   var response = UrlFetchApp.fetch(url, options);
   return response;
 }
 
 function gcal_test() {
-  var cal = CalendarApp.getCalendarById(PropertiesService.getScriptProperties().getProperty('google_email_address'));
+  var cal = CalendarApp.getCalendarById(scriptProperties.getProperty('google_email_address'));
   var date = new Date();
   var events = cal.getEventsForDay(date);
   Logger.log(events[0].devareEvent());
@@ -80,4 +96,3 @@ function gcal_test() {
 function trigger_calender_updated() {
   var sabun = 0;
 }
-
