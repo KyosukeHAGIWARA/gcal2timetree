@@ -7,8 +7,8 @@ function calendarUpdatedSample(e) {
     Logger.log('kitayo');
 }
 
-
-function fetchUpdatedEvents(e) {
+// イベント更新検知で呼ばれ、差分イベント情報をとってくるメソッド
+function gcalFetchUpdatedEvents(e) {
     var calendarId = e.calendarId;
 
     // 予定取得時にsyncTokenを指定して差分イベントを取得
@@ -52,6 +52,28 @@ function fetchUpdatedEvents(e) {
                 'end': summaryEvent.end.dateTime,
                 'status': summaryEvent.status,
                 'location': detailEvent.getLocation(),
+                'description': detailEvent.getDescription(),
+                'isAllDay': detailEvent.isAllDayEvent()
+            });
+        } else {
+            // イベント削除時
+
+            var detailEvent = CalendarApp.getEventById(summaryEvent.id);
+            // Logger.log();
+            // Logger.log(detailEvent.getStartTime());
+            // Logger.log(detailEvent.getEndTime());
+
+            // イベントの基礎データをpush
+            eventList.push({
+                'id': summaryEvent.id,
+                'title': detailEvent.getTitle(),
+                'created': '',
+                'updated': '',
+                'start': detailEvent.getStartTime(),
+                'end': detailEvent.getEndTime(),
+                'status': summaryEvent.status,
+                'location': detailEvent.getLocation(),
+                'description': detailEvent.getLocation(),
                 'description': detailEvent.getDescription(),
                 'isAllDay': detailEvent.isAllDayEvent()
             });

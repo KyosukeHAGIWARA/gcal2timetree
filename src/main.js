@@ -5,12 +5,12 @@ function onCalendarEventUpdate(e) {
 }
 
 function mainProcess(e) {
-    var eventList = fetchUpdatedEvents(e);
+    var eventList = gcalFetchUpdatedEvents(e);
 
     for (var i = 0; i < eventList.length; i++) {
         var event = eventList[i];
 
-        if (event.status == 'canceled') {
+        if (event.status == 'cancelled') {
             // キャンセルなら、対応するイベントをList検索
             // あれば消す
             // なければ 1週間以内かを計算
@@ -21,32 +21,34 @@ function mainProcess(e) {
             var ttEventId = sssqlSearchById(event.id);
 
             if (ttEventId != []) {
-                timeTreeDeleteEventById(ttEventId[0]);
+                Logger.log(ttEventId);
+                timeTreeDeleteEventById(ttEventId[0].tt_event_id);
+
+                // sssqlDeleteIdRecord(ttEventId[0], 0);
             } else {
                 // TODO implement 正常に消せなかったよアラート
             }
 
         } else if (event.status == 'confirmed') {
             // 新規作成する
-            var options = {
 
-            };
             var response = JSON.parse(timeTreeCreateEvent(event));
-            Logger.log(response);
-            ssSqlInsertIdRecord(event.id, response.data.id);
+            // Logger.log(response);
+
+            // TODO tt新規作成失敗した時の処理？
+
+            // テーブルにID対応を追加
+            sssqlInsertIdRecord(event.id, response.data.id);
 
         } else if (event.status == 'updated') {
             //   更新なら 対応するイベントをList検索
             //     あったら 該当するイベントIDで更新
             //     なければ どうにか対処
 
-            var ttEventId = searchIdList(event.id);
+            var ttEventId = sssqlSearchById(event.id);
 
             if (ttEventId != []) {
-                var options = {
-
-                };
-                timeTreeUpdateEventById(ttEventId[0], options);
+                timeTreeUpdateEventById(ttEventId[0], event);
             } else {
                 // TODO implement 正常に更新できなかったよアラート
             }
