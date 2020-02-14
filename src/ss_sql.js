@@ -27,7 +27,15 @@ function sssqlInsertIdRecord(gcalEventId, ttEventId) {
 
 // 2argsを以てテーブルから削除
 function sssqlDeleteIdRecord(gcalEventId, ttEventId) {
-  sssql.deleteRows(Utilities.formatString('gcal_event_id = %s and tt_event_id = %s', gcalEventId, ttEventId));
+  if (gcalEventId != null && gcalEventId != null) {
+    sssql.deleteRows(Utilities.formatString('gcal_event_id = %s AND tt_event_id = %s', gcalEventId, ttEventId));
+  } else if (gcalEventId == null && gcalEventId != null) {
+    sssql.deleteRows(Utilities.formatString('tt_event_id = %s', ttEventId));
+  } else if (gcalEventId != null && gcalEventId == null) {
+    sssql.deleteRows(Utilities.formatString('gcal_event_id = %s', gcalEventId));
+  } else {
+    Logger.log('deleteRecordError : please specify ID');
+  }
 }
 
 

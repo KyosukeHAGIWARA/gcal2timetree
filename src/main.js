@@ -21,10 +21,9 @@ function mainProcess(e) {
             var ttEventId = sssqlSearchById(event.id);
 
             if (ttEventId != []) {
-                Logger.log(ttEventId);
                 timeTreeDeleteEventById(ttEventId[0].tt_event_id);
 
-                // sssqlDeleteIdRecord(ttEventId[0], 0);
+                sssqlDeleteIdRecord(ttEventId[0].tt_event_id, null);
             } else {
                 // TODO implement 正常に消せなかったよアラート
             }
@@ -33,7 +32,7 @@ function mainProcess(e) {
             // 新規作成する
 
             var response = JSON.parse(timeTreeCreateEvent(event));
-            // Logger.log(response);
+            Logger.log(response);
 
             // TODO tt新規作成失敗した時の処理？
 
@@ -48,7 +47,7 @@ function mainProcess(e) {
             var ttEventId = sssqlSearchById(event.id);
 
             if (ttEventId != []) {
-                timeTreeUpdateEventById(ttEventId[0], event);
+                timeTreeUpdateEventById(ttEventId[0].tt_event_id, event);
             } else {
                 // TODO implement 正常に更新できなかったよアラート
             }

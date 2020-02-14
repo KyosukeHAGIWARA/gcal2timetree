@@ -4,6 +4,9 @@ var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
 
 // イベント作成メソッド
 function timeTreeCreateEvent(eventOptions) {
+  Logger.log(eventOptions.start);
+  Logger.log(eventOptions.end);
+
   var url = Utilities.formatString('https://timetreeapis.com/calendars/%s/events', targetCalendarId);
   var method = 'POST';
   var payload = {
@@ -13,9 +16,9 @@ function timeTreeCreateEvent(eventOptions) {
         'title': eventOptions.title,
         'all_day': eventOptions.isAllDay,
         'start_at': eventOptions.start,
-        'start_timezone': 'UTC',
+        'start_timezone': eventOptions.timezone,
         'end_at': eventOptions.end,
-        'end_timezone': 'UTC',
+        'end_timezone': eventOptions.timezone,
         'description': eventOptions.description,
         'location': eventOptions.location,
       },
@@ -88,9 +91,7 @@ function timetreeAPI(url, method, payload) {
     'muteHttpExceptions': true
   };
   //  Logger.log(options);
-
-  var response = UrlFetchApp.fetch(url, options);
-  return response;
+  return UrlFetchApp.fetch(url, options);
 }
 
 

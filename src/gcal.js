@@ -23,24 +23,32 @@ function gcalFetchUpdatedEvents(e) {
     // 差分イベントを処理
     for (var i = 0; i < diffEventList.items.length; i++) {
         var summaryEvent = diffEventList.items[i];
-        // console.log(summaryEvent);
 
         if (summaryEvent.status == 'confirmed') {
             // id逆引きで対応するイベントを取ってくる
             var detailEvent = CalendarApp.getEventById(summaryEvent.id);
 
+
+
             // 終日イベントかを判定
-            if (false && detailEvent.isAllDayEvent()) {
+            if (detailEvent.isAllDayEvent()) {
                 //TODO イケてない実装をイケてる実装にする 0:00 - 23:59とかで
-                summaryEvent.start.dateTime = summaryEvent.start.date;
-                summaryEvent.end.dateTime = summaryEvent.end.date;
+                summaryEvent.start.dateTime = summaryEvent.start.date + 'T00:00:00';
+                summaryEvent.end.dateTime = summaryEvent.start.date + 'T00:00:00';
             }
 
             // イベント新規作成と更新を見分ける
-            if (false && summaryEvent.status == 'confirmed' && (summaryEvent.created != summaryEvent.updated)) {
-                // TODO ミリ秒まで比較してconfirmedが通らないので秒比較くらいに変える
+            if (summaryEvent.created.slice(0, -4) != summaryEvent.updated.slice(0, -4)) {
+                // 下4桁のミリ秒部分を削ってtimestamp比較 ずれてたら更新と判断
                 summaryEvent.status = 'updated';
             }
+
+
+            // タイトルないと怒られるので
+            if (!summaryEvent.summary) {
+                summaryEvent.summary = '名前なしイベント';
+            }
+
 
             // イベントの基礎データをpush
             eventList.push({
@@ -50,6 +58,7 @@ function gcalFetchUpdatedEvents(e) {
                 'updated': summaryEvent.updated,
                 'start': summaryEvent.start.dateTime,
                 'end': summaryEvent.end.dateTime,
+                'timezone': 'UTC',
                 'status': summaryEvent.status,
                 'location': detailEvent.getLocation(),
                 'description': detailEvent.getDescription(),
@@ -59,9 +68,6 @@ function gcalFetchUpdatedEvents(e) {
             // イベント削除時
 
             var detailEvent = CalendarApp.getEventById(summaryEvent.id);
-            // Logger.log();
-            // Logger.log(detailEvent.getStartTime());
-            // Logger.log(detailEvent.getEndTime());
 
             // イベントの基礎データをpush
             eventList.push({
