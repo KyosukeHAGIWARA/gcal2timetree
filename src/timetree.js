@@ -4,8 +4,6 @@ var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
 
 // イベント作成メソッド
 function timeTreeCreateEvent(eventOptions) {
-  Logger.log(eventOptions.start);
-  Logger.log(eventOptions.end);
 
   var url = Utilities.formatString('https://timetreeapis.com/calendars/%s/events', targetCalendarId);
   var method = 'POST';
