@@ -1,5 +1,5 @@
 var scriptProperties = PropertiesService.getScriptProperties();
-var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID_DEV');
+var targetCalendarId = scriptProperties.getProperty('TARGET_CALENDAR_ID');
 
 
 // イベント作成メソッド
@@ -23,7 +23,7 @@ function timeTreeCreateEvent(eventOptions) {
       'relationships': {
         'label': {
           'data': {
-            'id': 'uIW4Wt9M8sVD,1',
+            'id': 'uIW4Wt9M8sVD,3',
             'type': 'label'
           }
         }
@@ -54,7 +54,7 @@ function timeTreeUpdateEventById(eventId, eventOptions) {
       'relationships': {
         'label': {
           'data': {
-            'id': 'uIW4Wt9M8sVD,1',
+            'id': 'uIW4Wt9M8sVD,3',
             'type': 'label'
           }
         }
